@@ -1,0 +1,34 @@
+Task: Build a full-stack mobile-first PWA for Indian moms to find high-protein breakfast and lunchbox ideas.
+Stack: > - Frontend: Next.js (App Router), TypeScript, Tailwind CSS, Lucide Icons.
+•	Backend: Node.js/Express (scaffold within the same repo or a /server folder).
+•	DB: MongoDB Atlas (provide placeholders for URI).
+•	AI: Use Gemini 1.5 Flash for the "Fridge Scanner" (Image-to-JSON) and Recipe Generation.
+Core Features to Implement:
+1.	Auth: Google SSO and Mobile OTP (strictly no passwords).
+2.	Fridge Scanner: A feature where users upload a photo $\rightarrow$ AI detects ingredients $\rightarrow$ User confirms $\rightarrow$ AI suggests a recipe.
+3.	Recipe Library: Tabbed view for 'Breakfast', 'Lunch Box', and 'Quick Bites' (<15 mins).
+4.	UI/UX: Extremely simple, one-handed navigation. Use a bottom tab bar and large, accessible buttons.
+Execution Instructions:
+•	Start by creating a Task List Artifact.
+•	Scaffold the Next.js frontend and Express backend.
+•	Create a mock "Recipe" dataset in MongoDB format to get started.
+•	After each major component, provide a Walkthrough Artifact so I can verify the logic.
+
+
+Recommended Agent Rules - 
+1. Culinary Vocabulary & Context
+•	Rule: Use common Indian culinary terms alongside English (e.g., Chilla/Crepe, Poha/Flattened Rice, Kadai/Wok).
+•	Context: Assume a standard "Indian Masala Box" (Salt, Turmeric, Cumin, Mustard Seeds, Chili Powder) is always available and doesn't need to be "detected" by the Fridge Scanner.
+•	Localization: Default to metric units (grams/ml) and Celsius for any oven instructions.
+2. Nutritional "High-Protein" Logic
+Since this is for growing kids and busy moms, define what "High-Protein" means for the AI:
+•	Target Ratio: Every suggested recipe must aim for a Protein-to-Carb ratio of at least $1:3$.
+•	Priority Ingredients: Prioritize recipes featuring Paneer, Soya Chunks, Greek Yogurt (Hung Curd), Sprouts, Eggs, Dal, or Chickpeas.
+•	Optimization: If a recipe is traditionally carb-heavy (like Poha), the AI must suggest a "Protein Hack" (e.g., "Add 50g of crumbled Paneer or boiled Matar to boost protein").
+3. School Lunchbox (Dabba) Constraints
+•	Rule: Lunchbox recipes must be "Soggy-Proof." Avoid thin gravies; stick to dry (Sabzi) or semi-dry textures.
+•	Safety: Ensure recipes are kid-friendly (adjustable spice levels) and "Easy-to-Eat" (finger foods or bite-sized pieces).
+4. UI/UX "One-Handed" Engineering
+•	Constraint: All primary action buttons (Scan, Save, Next Step) must be placed in the "Thumb Zone" (bottom 30% of the screen).
+•	Constraint: Use high-contrast typography for easy reading while cooking.
+
