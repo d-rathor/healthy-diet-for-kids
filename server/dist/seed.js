@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+import Recipe from './models/Recipe.js';
 import dotenv from 'dotenv';
 dotenv.config();
 const mockRecipes = [
@@ -53,8 +55,24 @@ const mockRecipes = [
         imageUrl: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=300&fit=crop'
     }
 ];
-// In a real application, we would connect to Mongoose here:
-// mongoose.connect(process.env.MONGODB_URI as string)
-//   .then(() => Recipe.insertMany(mockRecipes)) ...
-console.log('Mock recipes generated successfully:', mockRecipes.length, 'recipes available.');
-export { mockRecipes };
+const seedDB = async () => {
+    try {
+        const uri = process.env.MONGODB_URI;
+        if (!uri) {
+            throw new Error('MONGODB_URI is not defined in the environment.');
+        }
+        console.log('Connecting to MongoDB...');
+        await mongoose.connect(uri);
+        console.log('Connected. Dropping existing recipes...');
+        await Recipe.deleteMany({});
+        console.log('Inserting mock recipes...');
+        await Recipe.insertMany(mockRecipes);
+        console.log(`Mock recipes generated successfully: ${mockRecipes.length} recipes available.`);
+        process.exit(0);
+    }
+    catch (error) {
+        console.error('Error seeding DB:', error);
+        process.exit(1);
+    }
+};
+seedDB();
