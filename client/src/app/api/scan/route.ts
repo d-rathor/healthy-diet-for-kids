@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
     try {
@@ -19,6 +19,8 @@ export async function POST(req: Request) {
                 detectedIngredients: ["Paneer", "Spinach", "Tomatoes", "Onions", "Green Peas"]
             });
         }
+
+        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
         const prompt = `
       You are an expert Indian culinary AI specializing in high-protein kids' meals.
