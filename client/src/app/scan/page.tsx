@@ -70,12 +70,16 @@ export default function ScanPage() {
                 body: JSON.stringify(reqBody)
             });
 
-            if (!res.ok) throw new Error('Analysis failed');
+            if (!res.ok) {
+                const errData = await res.json().catch(() => null);
+                console.error("Server API Error details:", errData);
+                throw new Error(errData?.details || 'Analysis failed with status ' + res.status);
+            }
             const data = await res.json();
             setIngredients(data.detectedIngredients || []);
-        } catch (err) {
-            console.error(err);
-            alert("Failed to analyze image. Please try again.");
+        } catch (err: any) {
+            console.error('Scan exception:', err);
+            alert(`Failed: ${err.message || 'Please try again.'}`);
         } finally {
             setIsAnalyzing(false);
         }

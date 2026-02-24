@@ -69,8 +69,14 @@ export async function POST(req: Request) {
         const data = JSON.parse(text);
         return NextResponse.json(data);
 
-    } catch (error) {
-        console.error("Gemini API Error:", error);
-        return NextResponse.json({ error: "Failed to analyze image" }, { status: 500 });
+    } catch (error: any) {
+        console.error("Gemini API Error details:", error);
+
+        // Pass the actual system error back to the frontend for debugging instead of a generic string
+        return NextResponse.json({
+            error: "Failed to analyze image",
+            details: error?.message || error?.toString() || "Unknown server exception",
+            stack: error?.stack
+        }, { status: 500 });
     }
 }
