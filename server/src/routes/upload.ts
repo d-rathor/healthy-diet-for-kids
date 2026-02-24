@@ -38,15 +38,10 @@ router.post('/', upload.single('image'), async (req, res) => {
 
         await s3.send(command);
 
-        // Construct the public URL assuming the bucket is public
-        // B2 public URL format: https://f000.backblazeb2.com/file/<bucket_name>/<file_name>
-        const baseUrl = process.env.B2_ENDPOINT?.replace('s3.', 'f000.'); // Approximating the public URL root
-        let publicUrl = '';
-        if (process.env.B2_ENDPOINT?.includes('backblazeb2.com')) {
-            publicUrl = `https://f000.backblazeb2.com/file/${bucketName}/${fileName}`;
-        } else {
-            publicUrl = `${process.env.B2_ENDPOINT}/${bucketName}/${fileName}`;
-        }
+        // Construct the public URL using the S3 compatible endpoint
+        const rawEndpoint = process.env.B2_ENDPOINT as string;
+        const cleanEndpoint = rawEndpoint.replace(/^https?:\/\//, '');
+        const publicUrl = `https://${cleanEndpoint}/${bucketName}/${fileName}`;
 
         res.json({ success: true, url: publicUrl, fileName });
     } catch (error) {
