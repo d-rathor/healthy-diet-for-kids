@@ -5,9 +5,19 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
     try {
-        const { imageBase64 } = await req.json();
+        const body = await req.json();
 
-        if (!imageBase64) {
+        let base64Data = body.imageBase64;
+
+        // If an image URL is provided (e.g. from B2 upload), fetch it to avoid large frontend payloads
+        if (body.imageUrl) {
+            const imgRes = await fetch(body.imageUrl);
+            if (!imgRes.ok) throw new Error("Failed to download image from B2");
+            const arrayBuffer = await imgRes.arrayBuffer();
+            base64Data = Buffer.from(arrayBuffer).toString('base64');
+        }
+
+        if (!base64Data) {
             return NextResponse.json({ error: "No image provided" }, { status: 400 });
         }
 
@@ -41,7 +51,7 @@ export async function POST(req: Request) {
             model: 'gemini-2.5-flash',
             contents: [
                 prompt,
-                { inlineData: { data: imageBase64, mimeType: 'image/jpeg' } }
+                { inlineData: { data: base64Data, mimeType: 'image/jpeg' } }
             ],
             config: {
                 responseMimeType: "application/json",

@@ -59,14 +59,15 @@ export default function ScanPage() {
             const b2Data = await uploadRes.json();
             console.log('B2 Upload success:', b2Data);
 
-            // Strip data uri prefix if present for Gemini
-            const base64Data = imageUri.split(',')[1] || imageUri;
+            // Send the uploaded public B2 Image URL to the Next.js API route instead of the raw Base64 string
+            // This prevents Netlify Serverless Functions from crashing due to 4MB Payload Limits
+            const reqBody = b2Data?.url ? { imageUrl: b2Data.url } : { imageBase64: imageUri.split(',')[1] || imageUri };
 
             // Process with Gemini via Next.js
             const res = await fetch('/api/scan', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ imageBase64: base64Data })
+                body: JSON.stringify(reqBody)
             });
 
             if (!res.ok) throw new Error('Analysis failed');
