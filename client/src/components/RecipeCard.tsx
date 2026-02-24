@@ -24,8 +24,12 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
 
         const userId = (session.user as any).id;
         try {
+            const isProd = process.env.NODE_ENV === 'production';
+            const defaultApiUrl = isProd ? 'https://healthy-diet-for-kids.onrender.com/api' : 'http://localhost:5000/api';
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || defaultApiUrl;
+
             const method = isSaved ? 'DELETE' : 'POST';
-            const res = await fetch(`http://localhost:5000/api/users/${userId}/save-recipe${isSaved ? `/${recipe.id}` : ''}`, {
+            const res = await fetch(`${apiUrl}/users/${userId}/save-recipe${isSaved ? `/${recipe.id}` : ''}`, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
                 body: method === 'POST' ? JSON.stringify({ recipeId: recipe.id }) : undefined
@@ -73,8 +77,8 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
                     </div>
                     {recipe.dietaryPreference && (
                         <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${recipe.dietaryPreference === 'Veg' ? 'text-green-700 bg-green-100' :
-                                recipe.dietaryPreference === 'Vegan' ? 'text-emerald-700 bg-emerald-100' :
-                                    'text-red-700 bg-red-100'
+                            recipe.dietaryPreference === 'Vegan' ? 'text-emerald-700 bg-emerald-100' :
+                                'text-red-700 bg-red-100'
                             }`}>
                             {recipe.dietaryPreference}
                         </div>

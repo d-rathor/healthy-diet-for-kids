@@ -19,7 +19,9 @@ const authOptions: AuthOptions = {
         async signIn({ user }) {
             if (user.email) {
                 try {
-                    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+                    const isProd = process.env.NODE_ENV === 'production';
+                    const defaultApiUrl = isProd ? 'https://healthy-diet-for-kids.onrender.com/api' : 'http://localhost:5000/api';
+                    const apiUrl = process.env.NEXT_PUBLIC_API_URL || defaultApiUrl;
                     const res = await fetch(`${apiUrl}/users/sync`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },

@@ -40,8 +40,15 @@ function LibraryContent() {
         const fetchRecipes = async () => {
             setIsLoading(true);
             try {
-                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-                const res = await fetch(`${apiUrl}/recipes`);
+                const isProd = process.env.NODE_ENV === 'production';
+                const defaultApiUrl = isProd ? 'https://healthy-diet-for-kids.onrender.com/api' : 'http://localhost:5000/api';
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || defaultApiUrl;
+                const res = await fetch(`${apiUrl}/recipes`, {
+                    cache: 'no-store', // Prevent Next.js from caching old data
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate'
+                    }
+                });
                 if (!res.ok) throw new Error('Failed to fetch recipes');
 
                 const data = await res.json();

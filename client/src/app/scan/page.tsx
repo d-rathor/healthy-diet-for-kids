@@ -46,7 +46,9 @@ export default function ScanPage() {
             const formData = new FormData();
             formData.append('image', blob, 'fridge-scan.jpg');
 
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+            const isProd = process.env.NODE_ENV === 'production';
+            const defaultApiUrl = isProd ? 'https://healthy-diet-for-kids.onrender.com/api' : 'http://localhost:5000/api';
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || defaultApiUrl;
             const uploadRes = await fetch(`${apiUrl}/upload`, {
                 method: 'POST',
                 body: formData
