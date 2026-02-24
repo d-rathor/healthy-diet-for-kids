@@ -3,6 +3,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IRecipe extends Document {
     title: string;
     type: 'Breakfast' | 'Lunch Box' | 'Quick Bites';
+    dietaryPreference: 'Veg' | 'Non-Veg' | 'Vegan';
     prepTimeMins: number;
     ingredients: string[];
     proteinPerServingGrams: number;
@@ -17,6 +18,7 @@ export interface IRecipe extends Document {
 const RecipeSchema: Schema = new Schema({
     title: { type: String, required: true },
     type: { type: String, enum: ['Breakfast', 'Lunch Box', 'Quick Bites'], required: true },
+    dietaryPreference: { type: String, enum: ['Veg', 'Non-Veg', 'Vegan'], required: true, default: 'Veg' },
     prepTimeMins: { type: Number, required: true },
     ingredients: [{ type: String }],
     proteinPerServingGrams: { type: Number, required: true },

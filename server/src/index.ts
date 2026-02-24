@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import recipesRouter from './routes/recipes.js';
+import usersRouter from './routes/users.js';
+import uploadRouter from './routes/upload.js';
 
 dotenv.config();
 
@@ -18,6 +20,8 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/healthy-d
     .catch((err) => console.error('Failed to connect to MongoDB', err));
 
 app.use('/api/recipes', recipesRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/upload', uploadRouter);
 
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'Server is running' });

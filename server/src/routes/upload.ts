@@ -9,8 +9,9 @@ dotenv.config();
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
+const endpoint = process.env.B2_ENDPOINT as string;
 const s3 = new S3Client({
-    endpoint: process.env.B2_ENDPOINT as string,
+    endpoint: endpoint.startsWith('http') ? endpoint : `https://${endpoint}`,
     region: process.env.B2_REGION as string,
     credentials: {
         accessKeyId: process.env.B2_ACCESS_KEY_ID as string,

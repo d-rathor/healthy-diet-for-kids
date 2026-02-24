@@ -8,6 +8,7 @@ const mockRecipes = [
     {
         title: 'Paneer Bhurji Sandwiches',
         type: 'Lunch Box',
+        dietaryPreference: 'Veg',
         prepTimeMins: 10,
         ingredients: ['Paneer (crumbled)', 'Whole wheat bread', 'Onion', 'Tomato', 'Turmeric', 'Salt', 'Butter'],
         proteinPerServingGrams: 15,
@@ -25,6 +26,7 @@ const mockRecipes = [
     {
         title: 'Sprouts & Moong Dal Chilla',
         type: 'Breakfast',
+        dietaryPreference: 'Vegan',
         prepTimeMins: 15,
         ingredients: ['Sprouted Moong Dal', 'Besan (Gram Flour)', 'Green Chili', 'Ginger', 'Salt', 'Oil'],
         proteinPerServingGrams: 12,
@@ -42,6 +44,7 @@ const mockRecipes = [
     {
         title: 'Soya Chunks Pulao',
         type: 'Lunch Box',
+        dietaryPreference: 'Vegan',
         prepTimeMins: 15,
         ingredients: ['Soya Chunks (boiled)', 'Basmati Rice', 'Carrots', 'Beans', 'Cumin seeds', 'Garam Masala'],
         proteinPerServingGrams: 18,
