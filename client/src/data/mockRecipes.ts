@@ -1,9 +1,11 @@
 export type RecipeType = 'Breakfast' | 'Lunch Box' | 'Quick Bites';
+export type DietaryPreference = 'Veg' | 'Non-Veg' | 'Vegan';
 
 export interface Recipe {
     id: string;
     title: string;
     type: RecipeType;
+    dietaryPreference: DietaryPreference;
     prepTimeMins: number;
     proteinPerServingGrams: number;
     carbPerServingGrams: number;
@@ -17,6 +19,7 @@ export const mockRecipes: Recipe[] = [
         id: '1',
         title: 'Paneer Bhurji Sandwiches',
         type: 'Lunch Box',
+        dietaryPreference: 'Veg',
         prepTimeMins: 10,
         proteinPerServingGrams: 15,
         carbPerServingGrams: 30,
@@ -28,6 +31,7 @@ export const mockRecipes: Recipe[] = [
         id: '2',
         title: 'Sprouts & Moong Dal Chilla',
         type: 'Breakfast',
+        dietaryPreference: 'Vegan',
         prepTimeMins: 15,
         proteinPerServingGrams: 12,
         carbPerServingGrams: 20,
@@ -39,6 +43,7 @@ export const mockRecipes: Recipe[] = [
         id: '3',
         title: 'Soya Chunks Pulao',
         type: 'Lunch Box',
+        dietaryPreference: 'Vegan',
         prepTimeMins: 15,
         proteinPerServingGrams: 18,
         carbPerServingGrams: 40,
@@ -50,6 +55,7 @@ export const mockRecipes: Recipe[] = [
         id: '4',
         title: 'Egg & Spinach Wrap (Roti)',
         type: 'Quick Bites',
+        dietaryPreference: 'Non-Veg',
         prepTimeMins: 8,
         proteinPerServingGrams: 14,
         carbPerServingGrams: 22,
@@ -61,6 +67,7 @@ export const mockRecipes: Recipe[] = [
         id: '5',
         title: 'Besan & Nut Mini Idlis',
         type: 'Breakfast',
+        dietaryPreference: 'Vegan',
         prepTimeMins: 20,
         proteinPerServingGrams: 10,
         carbPerServingGrams: 28,

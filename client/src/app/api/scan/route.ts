@@ -53,6 +53,9 @@ export async function POST(req: Request) {
             throw new Error("No response from Gemini");
         }
 
+        // Clean up potential markdown formatting that Gemini might add
+        text = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
         const data = JSON.parse(text);
         return NextResponse.json(data);
 

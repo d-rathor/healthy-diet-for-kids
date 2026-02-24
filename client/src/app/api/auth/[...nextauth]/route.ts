@@ -19,8 +19,8 @@ const authOptions: AuthOptions = {
         async signIn({ user }) {
             if (user.email) {
                 try {
-                    // Sync with our Express/MongoDB backend
-                    const res = await fetch(`http://localhost:5000/api/users/sync`, {
+                    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+                    const res = await fetch(`${apiUrl}/users/sync`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({

@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 
 import BottomNav from "@/components/layout/BottomNav";
 import Providers from "@/components/Providers";
+import TopHeader from "@/components/layout/TopHeader";
 
 export const metadata: Metadata = {
   title: "Kids Protein PWA",
@@ -28,11 +29,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100 flex justify-center`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#eef3ea] flex justify-center`}
       >
         <Providers>
-          <div className="w-full max-w-md min-h-screen bg-white shadow-xl relative overflow-hidden flex flex-col">
-            <main className="flex-1 overflow-y-auto pb-24">
+          <div className="w-full max-w-md min-h-screen bg-[#f4f9f0] shadow-xl relative overflow-hidden flex flex-col">
+            <TopHeader />
+            <main className="flex-1 overflow-y-auto pb-24 relative">
               {children}
             </main>
             <BottomNav />

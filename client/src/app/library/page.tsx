@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { RecipeType, Recipe as MockRecipeType } from '@/data/mockRecipes';
 import { Search } from 'lucide-react';
 import RecipeCard from '@/components/RecipeCard';
@@ -10,18 +11,37 @@ export interface Recipe extends MockRecipeType {
     _id?: string;
 }
 
-export default function LibraryPage() {
-    const [activeTab, setActiveTab] = useState<RecipeType>('Breakfast');
+function LibraryContent() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const tabParam = searchParams.get('tab') as RecipeType;
+
+    const tabs: RecipeType[] = ['Breakfast', 'Lunch Box', 'Quick Bites'];
+    const initialTab = tabs.includes(tabParam) ? tabParam : 'Breakfast';
+
+    const [activeTab, setActiveTab] = useState<RecipeType>(initialTab);
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    const tabs: RecipeType[] = ['Breakfast', 'Lunch Box', 'Quick Bites'];
+    // Update state if URL param changes
+    useEffect(() => {
+        if (tabParam && tabs.includes(tabParam) && tabParam !== activeTab) {
+            setActiveTab(tabParam);
+        }
+    }, [tabParam]);
+
+    const handleTabChange = (tab: RecipeType) => {
+        setActiveTab(tab);
+        // Shallow update the URL so it's shareable and navigation back works
+        router.replace(`/library?tab=${encodeURIComponent(tab)}`);
+    };
 
     useEffect(() => {
         const fetchRecipes = async () => {
             setIsLoading(true);
             try {
-                const res = await fetch(`http://localhost:5000/api/recipes`);
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+                const res = await fetch(`${apiUrl}/recipes`);
                 if (!res.ok) throw new Error('Failed to fetch recipes');
 
                 const data = await res.json();
@@ -35,7 +55,6 @@ export default function LibraryPage() {
                 setRecipes(formattedData);
             } catch (err) {
                 console.error(err);
-                // Fallback to mock behavior or show error toast in full app
             } finally {
                 setIsLoading(false);
             }
@@ -68,7 +87,7 @@ export default function LibraryPage() {
                     {tabs.map((tab) => (
                         <button
                             key={tab}
-                            onClick={() => setActiveTab(tab)}
+                            onClick={() => handleTabChange(tab)}
                             className={`whitespace-nowrap px-6 py-2.5 rounded-full font-bold text-sm transition-colors ${activeTab === tab
                                 ? 'bg-green-500 text-white shadow-md'
                                 : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
@@ -110,5 +129,17 @@ export default function LibraryPage() {
             </div>
 
         </div>
+    );
+}
+
+export default function LibraryPage() {
+    return (
+        <Suspense fallback={
+            <div className="h-full flex items-center justify-center bg-gray-50">
+                <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        }>
+            <LibraryContent />
+        </Suspense>
     );
 }

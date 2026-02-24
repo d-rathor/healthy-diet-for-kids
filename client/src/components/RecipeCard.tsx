@@ -66,11 +66,19 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
             <div className="p-4 flex flex-col gap-2">
                 <h3 className="font-bold text-gray-800 leading-tight">{recipe.title}</h3>
 
-                <div className="flex items-center gap-3 text-xs text-gray-500 font-medium">
-                    <div className="flex items-center gap-1">
+                <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold">
+                    <div className="flex items-center gap-1 text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
                         <Clock className="w-3 h-3" />
-                        {recipe.prepTimeMins} mins
+                        {recipe.prepTimeMins}m
                     </div>
+                    {recipe.dietaryPreference && (
+                        <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${recipe.dietaryPreference === 'Veg' ? 'text-green-700 bg-green-100' :
+                                recipe.dietaryPreference === 'Vegan' ? 'text-emerald-700 bg-emerald-100' :
+                                    'text-red-700 bg-red-100'
+                            }`}>
+                            {recipe.dietaryPreference}
+                        </div>
+                    )}
                     <div className="flex items-center gap-1 text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">
                         <Dumbbell className="w-3 h-3" />
                         {recipe.proteinPerServingGrams}g Protein
