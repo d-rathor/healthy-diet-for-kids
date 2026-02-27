@@ -18,40 +18,14 @@ export default function Home() {
       </header>
 
       {/* Fridge Scanner Card */}
-      <section className="bg-gradient-to-br from-[#fcb086] via-[#fdc791] to-[#fde1aa] rounded-[24px] p-6 text-gray-900 relative shadow-sm mb-4 h-[180px] flex flex-col justify-center overflow-hidden">
-        <div className="w-[65%] relative z-10">
-          <h2 className="text-[22px] font-extrabold tracking-tight mb-3 text-gray-900 drop-shadow-sm">Fridge Scanner</h2>
-          <div className="mb-5 leading-tight">
-            <span className="block text-[12px] font-bold text-gray-900/50 uppercase tracking-[0.15em] mb-1">Scan Your Fridge.</span>
-            <span className="block text-[17px] font-black tracking-tight text-gray-900">
-              Find Recipes. <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-600 italic">Fast.</span>
-            </span>
-          </div>
-          <Link href="/scan" className="inline-block">
-            <button className="bg-[#fef4dd] hover:bg-[#faeec5] text-gray-900 font-semibold px-5 py-2 rounded-full text-[13px] shadow-sm transition-colors cursor-pointer">
-              Scan Ingredients
-            </button>
-          </Link>
-        </div>
-
-        {/* Camera Icon Overlay */}
-        <div className="absolute right-8 top-1/2 -translate-y-1/2 z-0">
-          <div className="relative w-[72px] h-[72px]">
-            <Scan className="w-full h-full text-gray-900 opacity-90" strokeWidth={1} />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <svg
-                className="w-8 h-8 text-gray-900 opacity-90 relative top-0.5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                <circle cx="12" cy="13" r="4" />
-              </svg>
-            </div>
-          </div>
-        </div>
+      <section className="mb-4 rounded-[24px] overflow-hidden shadow-sm active:scale-95 transition-transform">
+        <Link href="/scan" className="block outline-none">
+          <img
+            src="/images/fridge-scanner-banner.png"
+            alt="Scan Your Fridge to Find Recipes Fast"
+            className="w-full h-auto object-cover"
+          />
+        </Link>
       </section>
 
       {/* Carousel Dots */}
