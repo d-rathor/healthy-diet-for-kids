@@ -1,0 +1,80 @@
+import { Router } from 'express';
+import { GoogleGenAI } from '@google/genai';
+
+const router = Router();
+
+router.post('/', async (req, res) => {
+    try {
+        const body = req.body;
+        let base64Data = body.imageBase64;
+
+        // If an image URL is provided (e.g. from B2 upload), fetch it to avoid large frontend payloads
+        if (body.imageUrl) {
+            const imgRes = await fetch(body.imageUrl);
+            if (!imgRes.ok) throw new Error("Failed to download image from B2");
+            const arrayBuffer = await imgRes.arrayBuffer();
+            base64Data = Buffer.from(arrayBuffer).toString('base64');
+        }
+
+        if (!base64Data) {
+            return res.status(400).json({ error: "No image provided" });
+        }
+
+        // MOCK RESPONSE FOR LOCAL TESTING
+        if (process.env.GEMINI_API_KEY === 'mock-key-for-testing') {
+            // Simulate Gemini processing time
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            return res.json({
+                detectedIngredients: ["Paneer", "Spinach", "Tomatoes", "Onions", "Green Peas"]
+            });
+        }
+
+        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+        const prompt = `
+      You are an expert Indian culinary AI specializing in high-protein kids' meals.
+      Analyze the provided image of a fridge or grocery haul.
+      
+      RULES:
+      1. Identify all visible food items, prioritizing: Paneer, Soya Chunks, Greek Yogurt (Hung Curd), Sprouts, Eggs, Dal, Chickpeas, Vegetables, Breads/Rotis.
+      2. IGNORE standard Indian Masala Box items (Salt, Turmeric, Cumin, Mustard Seeds, Chili Powder) as they are assumed available.
+      3. Return a STRICT JSON object with no markdown formatting or extra text.
+      
+      JSON FORMAT:
+      {
+        "detectedIngredients": ["Ingredient 1", "Ingredient 2", ...],
+      }
+    `;
+
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: [
+                prompt,
+                { inlineData: { data: base64Data, mimeType: 'image/jpeg' } }
+            ],
+            config: {
+                responseMimeType: "application/json",
+            }
+        });
+
+        let text = response.text;
+        if (!text) {
+            throw new Error("No response from Gemini");
+        }
+
+        text = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        const data = JSON.parse(text);
+
+        return res.json(data);
+
+    } catch (error: any) {
+        console.error("Gemini API Error details:", error);
+        return res.status(500).json({
+            error: "Failed to analyze image",
+            details: error?.message || error?.toString() || "Unknown server exception",
+            stack: error?.stack
+        });
+    }
+});
+
+export default router;
