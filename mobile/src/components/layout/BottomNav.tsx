@@ -3,7 +3,7 @@ import { Home, LayoutGrid, Bookmark, User } from 'lucide-react';
 
 export default function BottomNav() {
     return (
-        <nav className="fixed bottom-0 w-full max-w-md bg-white rounded-t-3xl shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.1)] z-50">
+        <nav className="fixed bottom-0 w-full max-w-md bg-white rounded-t-3xl shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.1)] z-50" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 12px)' }}>
             <div className="flex justify-around items-center h-[72px] px-2 relative">
                 <Link href="/" className="flex flex-col items-center justify-center w-14 h-full text-[#6b8e73] transition-colors">
                     <Home className="w-[22px] h-[22px]" />

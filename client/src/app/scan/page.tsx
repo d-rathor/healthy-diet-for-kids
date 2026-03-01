@@ -86,8 +86,8 @@ export default function ScanPage() {
     };
 
     const proceedToRecipes = () => {
-        alert(`Searching recipes for: ${ingredients.join(', ')}`);
-        router.push('/library');
+        const ingredientParams = ingredients.map(i => encodeURIComponent(i)).join(',');
+        router.push(`/library?ingredients=${ingredientParams}`);
     };
 
     return (

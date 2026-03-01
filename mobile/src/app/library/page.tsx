@@ -15,6 +15,11 @@ function LibraryContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const tabParam = searchParams.get('tab') as RecipeType;
+    const ingredientsParam = searchParams.get('ingredients');
+
+    const scannedIngredients = ingredientsParam
+        ? ingredientsParam.split(',').map(i => decodeURIComponent(i))
+        : [];
 
     const tabs: RecipeType[] = ['Breakfast', 'Lunch Box', 'Quick Bites'];
     const initialTab = tabs.includes(tabParam) ? tabParam : 'Breakfast';
@@ -33,7 +38,10 @@ function LibraryContent() {
     const handleTabChange = (tab: RecipeType) => {
         setActiveTab(tab);
         // Shallow update the URL so it's shareable and navigation back works
-        router.replace(`/library?tab=${encodeURIComponent(tab)}`);
+        const params = new URLSearchParams();
+        params.set('tab', tab);
+        if (ingredientsParam) params.set('ingredients', ingredientsParam);
+        router.replace(`/library?${params.toString()}`);
     };
 
     useEffect(() => {
@@ -105,6 +113,15 @@ function LibraryContent() {
                     ))}
                 </div>
             </div>
+
+            {/* Scanned Ingredients Banner */}
+            {scannedIngredients.length > 0 && (
+                <div className="mx-4 mt-3 bg-gradient-to-r from-[#e4f3e8] to-[#d4eadb] rounded-2xl px-4 py-3 border border-[#c5ddc9]">
+                    <p className="text-[13px] font-semibold text-[#2d5a3a]">
+                        🔍 Recipes that contain: <span className="font-extrabold text-[#1a3d24]">{scannedIngredients.join(', ')}</span>
+                    </p>
+                </div>
+            )}
 
             {/* Recipe Grid */}
             <div className="p-4 grid grid-cols-2 gap-4">
