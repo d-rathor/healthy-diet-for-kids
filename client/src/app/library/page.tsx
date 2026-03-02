@@ -76,7 +76,27 @@ function LibraryContent() {
         fetchRecipes();
     }, []);
 
-    const filteredRecipes = recipes.filter(r => r.type === activeTab);
+    // Smart ingredient-based filtering
+    const filteredRecipes = recipes.filter(r => {
+        // Always filter by tab
+        if (r.type !== activeTab) return false;
+
+        // If no scanned ingredients, show all recipes in this tab
+        if (scannedIngredients.length === 0) return true;
+
+        // Count how many scanned ingredients match this recipe
+        const matchCount = scannedIngredients.filter(scanned =>
+            (r.ingredients || []).some(recipeIng =>
+                recipeIng.toLowerCase().includes(scanned.toLowerCase()) ||
+                scanned.toLowerCase().includes(recipeIng.toLowerCase())
+            )
+        ).length;
+
+        // If 1-2 scanned ingredients: show if at least 1 matches
+        // If 3+ scanned ingredients: show if at least 2 match
+        const minRequired = scannedIngredients.length <= 2 ? 1 : 2;
+        return matchCount >= minRequired;
+    });
 
     return (
         <div className="h-full flex flex-col bg-gray-50">

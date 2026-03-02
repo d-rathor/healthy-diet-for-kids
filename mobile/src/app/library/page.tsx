@@ -37,7 +37,6 @@ function LibraryContent() {
 
     const handleTabChange = (tab: RecipeType) => {
         setActiveTab(tab);
-        // Shallow update the URL so it's shareable and navigation back works
         const params = new URLSearchParams();
         params.set('tab', tab);
         if (ingredientsParam) params.set('ingredients', ingredientsParam);
@@ -52,7 +51,7 @@ function LibraryContent() {
                 const defaultApiUrl = isProd ? 'https://healthy-diet-for-kids.onrender.com/api' : 'http://localhost:5000/api';
                 const apiUrl = process.env.NEXT_PUBLIC_API_URL || defaultApiUrl;
                 const res = await fetch(`${apiUrl}/recipes`, {
-                    cache: 'no-store', // Prevent Next.js from caching old data
+                    cache: 'no-store',
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate'
                     }
@@ -61,7 +60,6 @@ function LibraryContent() {
 
                 const data = await res.json();
 
-                // Map _id to id to satisfy RecipeCard prop types
                 const formattedData = data.map((item: any) => ({
                     ...item,
                     id: item._id?.toString() || item.id
@@ -78,7 +76,27 @@ function LibraryContent() {
         fetchRecipes();
     }, []);
 
-    const filteredRecipes = recipes.filter(r => r.type === activeTab);
+    // Smart ingredient-based filtering
+    const filteredRecipes = recipes.filter(r => {
+        // Always filter by tab
+        if (r.type !== activeTab) return false;
+
+        // If no scanned ingredients, show all recipes in this tab
+        if (scannedIngredients.length === 0) return true;
+
+        // Count how many scanned ingredients match this recipe
+        const matchCount = scannedIngredients.filter(scanned =>
+            (r.ingredients || []).some(recipeIng =>
+                recipeIng.toLowerCase().includes(scanned.toLowerCase()) ||
+                scanned.toLowerCase().includes(recipeIng.toLowerCase())
+            )
+        ).length;
+
+        // If 1-2 scanned ingredients: show if at least 1 matches
+        // If 3+ scanned ingredients: show if at least 2 match
+        const minRequired = scannedIngredients.length <= 2 ? 1 : 2;
+        return matchCount >= minRequired;
+    });
 
     return (
         <div className="h-full flex flex-col bg-gray-50">
@@ -87,7 +105,7 @@ function LibraryContent() {
             <div className="bg-white px-6 pt-6 pb-2 sticky top-0 z-10 shadow-sm">
                 <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight mb-4">Recipe Library</h1>
 
-                {/* Search Bar - Thumb Zone Friendly */}
+                {/* Search Bar */}
                 <div className="relative mb-6">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <input

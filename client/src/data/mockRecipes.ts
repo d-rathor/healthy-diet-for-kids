@@ -7,6 +7,7 @@ export interface Recipe {
     type: RecipeType;
     dietaryPreference: DietaryPreference;
     prepTimeMins: number;
+    ingredients?: string[];
     proteinPerServingGrams: number;
     carbPerServingGrams: number;
     proteinToCarbRatio: number;
